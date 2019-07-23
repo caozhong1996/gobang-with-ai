@@ -5,7 +5,7 @@ ctx.strokeStyle = '#5e5d5d'
 ctx.lineWidth = 0.5
 
 // 初始化棋盘样式
-function initBoard () {
+function initBoard() {
     for (var i = 0; i < 15; i++) {
         ctx.moveTo(15 + i * 30, 15);
         ctx.lineTo(15 + i * 30, 435);
@@ -17,47 +17,70 @@ function initBoard () {
 }
 
 // 初始化棋盘上每一个可以下子的点，0没有棋子，1有棋子
-function initPiceList (pieceList) {
+function initPiceList(pieceList) {
     for (let i = 0; i < 15; i++) {
         pieceList[i] = []
-        for (let j = 0; j < 15; j ++) {
+        for (let j = 0; j < 15; j++) {
             pieceList[i][j] = 0
         }
     }
 }
 
-function initWins (wins) {
+// 初始化所有可能赢的情况
+function initWins(wins) {
     let count = 0
-    // 全部横着的情况
-    for (let i = 0; i < 12; i++) {
-        wins[i] = []
-        for (let j = 0; j < 15; j++) {
-            wins[i][j] = []
-            wins[i][j][count] = 1
-            count++
+    for (var i = 0; i < 15; i++) {
+        wins[i] = [];
+        for (var j = 0; j < 15; j++) {
+            wins[i][j] = [];
         }
     }
-    // 全部竖着的情况
-    for (let i = 0; i < 15; i++) {
-        wins[i] = []
-        for (let j = 0; j < 12; j++) {
-            wins[i][j] = []
-            wins[i][j][count] = 1
-            count++
+    // 竖向所有赢法
+    for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                wins[i][j + k][count] = true;
+            }
+            count++;
         }
     }
-    // 全部左斜的情况
-    // for (let ) {
 
-    // }
-    console.log(count)
+    // 横向所有赢法
+    for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                wins[j + k][i][count] = true;
+            }
+            count++;
+        }
+    }
+
+    // 所有左边斜的赢法
+    for (var i = 0; i < 11; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                wins[i + k][j + k][count] = true;
+            }
+            count++;
+        }
+    }
+
+    // 所有又斜的赢法
+    for (var i = 0; i < 11; i++) {
+        for (var j = 14; j > 3; j--) {
+            for (var k = 0; k < 5; k++) {
+                wins[i + k][j - k][count] = true;
+            }
+            count++;
+        }
+    }
 }
 
-function drawPiece (x, y) {
+function drawPiece(x, y) {
     ctx.fillStyle = hand ? "#000" : '#fff'
     ctx.strokeStyle = hand ? "#0000ff" : '#000'
     ctx.beginPath()
-    ctx.arc(x * 30 + 15, y * 30 + 15, 12, 0, 2*Math.PI, true)
+    ctx.arc(x * 30 + 15, y * 30 + 15, 12, 0, 2 * Math.PI, true)
     ctx.closePath()
     ctx.stroke()
     ctx.fill()
